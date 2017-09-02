@@ -125,10 +125,6 @@ set nowrap "disable wrapping of lines
 " Use vim with clipboard support for this to work
 set clipboard=unnamedplus
 
-" Set swapfile in different directory
-set swapfile
-set directory=~/.vim_runtime/temp_dirs/swapdir
-
 " Enable ignorecase when searching
 set ignorecase
 " Ignore case if search pattern is all lowercase
@@ -137,6 +133,10 @@ set smartcase
 set autowrite
 set novisualbell
 set noerrorbells
+
+" Set swapfile in different directory
+set swapfile
+set directory=~/.vim_runtime/temp_dirs/swapdir
 
 " Look and feel
 set t_Co=256

@@ -1,0 +1,34 @@
+inoremap jj <ESC> 
+inoremap jk <ESC> 
+inoremap kj <ESC> 
+set number "show number of line
+set relativenumber "show relative number
+set shiftwidth=4
+set softtabstop=4
+set expandtab "use space for tab
+set autoindent
+set smartindent
+
+syntax on
+
+set incsearch "incremental search as you type
+set hlsearch "hightlight search
+set showmatch "show matching bracket
+" This unsets the last search pattern register by hitting return
+nnoremap <CR> :noh<CR><CR>
+
+set ruler "set ruler
+set nowrap "disable wrapping of lines
+
+" Use vim with clipboard support for this to work
+set clipboard=unnamedplus
+
+" Enable ignorecase when searching
+set ignorecase
+" Ignore case if search pattern is all lowercase
+set smartcase
+" Save on buffer change
+set autowrite
+set novisualbell
+set noerrorbells
+
