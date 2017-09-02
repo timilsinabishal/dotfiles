@@ -134,6 +134,16 @@ set autowrite
 set novisualbell
 set noerrorbells
 
+" C-h/j/k/l to move between buffers
+map <C-h> <C-w>h
+map <C-j> <C-w>j
+map <C-k> <C-w>k
+map <C-l> <C-w>l
+
+" Easier tab navigation
+nnoremap t gt
+nnoremap T gT
+
 " Set swapfile in different directory
 set swapfile
 set directory=~/.vim_runtime/temp_dirs/swapdir
