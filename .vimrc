@@ -34,9 +34,6 @@ filetype plugin indent on
 
 " }}}
 
-" Enable mouse support
-set mouse=a
-
 " Nerdtree configuration "{{{
 " Open NERDTree by default
 autocmd vimenter * NERDTree 
@@ -99,10 +96,16 @@ let g:ycm_autoclose_preview_window_after_insertion = 1
 let g:ycm_autoclose_preview_window_after_completion = 1
 " }}}
 
+" Look and feel
+set t_Co=256
+set background=dark
+let g:solarized_termcolors=256
+let g:solarized_termtrans=1
+colo solarized
+
 " General "{{{
 inoremap jj <ESC> 
 inoremap jk <ESC> 
-inoremap kj <ESC> 
 set number "show number of line
 set relativenumber "show relative number
 set shiftwidth=4
@@ -110,6 +113,12 @@ set softtabstop=4
 set expandtab "use space for tab
 set autoindent
 set smartindent
+
+" Enable better write in readonly files
+cmap w!! w !sudo tee % >/dev/null
+
+" Enable mouse support
+set mouse=a
 
 syntax on
 
@@ -141,19 +150,11 @@ map <C-k> <C-w>k
 map <C-l> <C-w>l
 
 " Easier tab navigation
-nnoremap t gt
-nnoremap T gT
 
 " Set swapfile in different directory
 set swapfile
 set directory=~/.vim_runtime/temp_dirs/swapdir
 
-" Look and feel
-set t_Co=256
-set background=dark
-let g:solarized_termcolors=256
-let g:solarized_termtrans=1
-colo solarized
 " }}}
 
 " Presistent undo on files"{{{
