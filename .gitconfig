@@ -1,0 +1,15 @@
+[color]
+	ui = auto
+[user]
+[user]
+[user]
+	name = Bishal Timilsina
+	email = bishaltimilsina@gmail.com
+[diff]
+	tool = meld
+[merge]
+	tool = meld
+[mergetool]
+	prompt = false
+[push]
+	default = current

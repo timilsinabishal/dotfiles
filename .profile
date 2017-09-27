@@ -34,3 +34,11 @@ xcape -e 'Caps_Lock=Escape' -t 100
 
 # config alias for dotfiles versioning
 alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
+
+# alias
+alias ssh="sshrc"
+
+#android
+export ANDROID_HOME=$HOME/Android/Sdk
+export PATH=$PATH:$ANDROID_HOME/tools
+export PATH=$PATH:$ANDROID_HOME/platform-tools
