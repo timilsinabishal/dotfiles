@@ -37,6 +37,7 @@ alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
 
 # alias
 alias ssh="sshrc"
+alias copy="xclip -selection c"
 
 #android
 export ANDROID_HOME=$HOME/Android/Sdk
