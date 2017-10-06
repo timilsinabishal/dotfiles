@@ -19,6 +19,9 @@ Plugin 'valloric/youcompleteme'
 Plugin 'vim-javascript'
 Plugin 'scrooloose/syntastic'
 
+" Integration with tmux
+Plugin 'tmux-plugins/vim-tmux-focus-events'
+
 " Experimental for working with laravel
 "Plugin 'Shougo/vimproc'
 "Plugin 'Shougo/unite.vim'
@@ -113,6 +116,10 @@ set softtabstop=4
 set expandtab "use space for tab
 set autoindent
 set smartindent
+
+" Enable detect of file change outside of vim
+set autoread
+au FocusGained,BufEnter * :checktime
 
 " Enable better write in readonly files
 cmap w!! w !sudo tee % >/dev/null
