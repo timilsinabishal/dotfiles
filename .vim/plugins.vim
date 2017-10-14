@@ -13,8 +13,9 @@ Plugin 'tpope/vim-fugitive'
 
 " Programming
 Plugin 'valloric/youcompleteme'
-Plugin 'vim-javascript'
+Plugin 'pangloss/vim-javascript'
 Plugin 'scrooloose/syntastic'
+Plugin 'editorconfig/editorconfig-vim'
 
 " Integration with tmux
 Plugin 'tmux-plugins/vim-tmux-focus-events'
@@ -69,11 +70,16 @@ let g:syntastic_always_populate_loc_list = 1
 " number of lines of errors in syntastic
 let g:syntastic_loc_list_height=5
 " }}}
+"
+" Editorconfig "{{{
+let g:EditorConfig_exec_path = '/usr/bin/editorconfig'
+" }}}
 
 " Javascript specific "{{{
 let g:javascript_plugin_jsdoc = 1
 let g:javascript_plugin_flow = 1
-
+set foldmethod=syntax
+set foldlevelstart=99
 " }}}
 
 " CtrlP specific "{{{
