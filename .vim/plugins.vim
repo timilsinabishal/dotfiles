@@ -14,8 +14,12 @@ Plugin 'tpope/vim-fugitive'
 " Programming
 Plugin 'valloric/youcompleteme'
 Plugin 'pangloss/vim-javascript'
-Plugin 'scrooloose/syntastic'
+"Plugin 'scrooloose/syntastic'
 Plugin 'editorconfig/editorconfig-vim'
+Plugin 'w0rp/ale'
+Plugin 'vim-airline/vim-airline' "also integrates with ale
+Plugin 'airblade/vim-gitgutter'
+Plugin 'tpope/vim-surround'
 
 " Integration with tmux
 Plugin 'tmux-plugins/vim-tmux-focus-events'
@@ -35,9 +39,14 @@ filetype plugin indent on
 
 " }}}
 
+
+" Vim-gutter configuration "{{{
+let g:gitgutter_max_signs = 1000  " default value
+" }}}
+
 " Nerdtree configuration "{{{
 " Open NERDTree by default
-autocmd vimenter * NERDTree 
+autocmd vimenter * NERDTree
 " Open NERDTree if no filename specified
 autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
@@ -49,26 +58,43 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isT
 map <c-n> :NERDTreeToggle<CR>
 " }}}
 
+" Ale configuration "{{{
+let g:ale_fixers = {
+\   'javascript': ['eslint'],
+\   'python': ['pylin'],
+\   'php': ['phpcs', 'phpmd']
+\}
+
+" Set this setting in vimrc if you want to fix files automatically on save.
+" This is off by default.
+let g:ale_fix_on_save = 1
+let g:airline#extensions#ale#enabled = 1
+
+" }}}
+
+" Vim airline configuration "{{{
+" }}}
+
 " Syntastic configuration "{{{
-let g:syntastic_javascript_checkers = ['eslint']
-let g:syntastic_python_checkers = ['pylint']
-let g:syntastic_php_checkers = ["php", "phpcs", "phpmd"]
-
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
-
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 0
-
-" aggregate errors from all checkers for a file type
-let g:syntastic_aggregate_errors = 1
-" automatically open and close error list when an error is detected
-let g:syntastic_always_populate_loc_list = 1
-" number of lines of errors in syntastic
-let g:syntastic_loc_list_height=5
+"let g:syntastic_javascript_checkers = ['eslint']
+"let g:syntastic_python_checkers = ['pylint']
+"let g:syntastic_php_checkers = ["php", "phpcs", "phpmd"]
+"
+"set statusline+=%#warningmsg#
+"set statusline+=%{SyntasticStatuslineFlag()}
+"set statusline+=%*
+"
+"let g:syntastic_always_populate_loc_list = 1
+"let g:syntastic_auto_loc_list = 1
+"let g:syntastic_check_on_open = 1
+"let g:syntastic_check_on_wq = 0
+"
+"" aggregate errors from all checkers for a file type
+"let g:syntastic_aggregate_errors = 1
+"" automatically open and close error list when an error is detected
+"let g:syntastic_always_populate_loc_list = 1
+"" number of lines of errors in syntastic
+"let g:syntastic_loc_list_height=5
 " }}}
 "
 " Editorconfig "{{{

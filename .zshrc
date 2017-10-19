@@ -98,3 +98,10 @@ if [ -f '/home/yipl/google-cloud-sdk/path.zsh.inc' ]; then source '/home/yipl/go
 # The next line enables shell command completion for gcloud.
 if [ -f '/home/yipl/google-cloud-sdk/completion.zsh.inc' ]; then source '/home/yipl/google-cloud-sdk/completion.zsh.inc'; fi
 
+
+# tabtab source for serverless package
+# uninstall by removing these lines or running `tabtab uninstall serverless`
+[[ -f /home/yipl/.config/yarn/global/node_modules/tabtab/.completions/serverless.zsh ]] && . /home/yipl/.config/yarn/global/node_modules/tabtab/.completions/serverless.zsh
+# tabtab source for sls package
+# uninstall by removing these lines or running `tabtab uninstall sls`
+[[ -f /home/yipl/.config/yarn/global/node_modules/tabtab/.completions/sls.zsh ]] && . /home/yipl/.config/yarn/global/node_modules/tabtab/.completions/sls.zsh
