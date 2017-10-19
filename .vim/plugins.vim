@@ -6,6 +6,7 @@ Plugin 'VundleVim/Vundle.vim'
 
 " Utility
 Plugin 'scrooloose/nerdtree'
+Plugin 'Xuyuanp/nerdtree-git-plugin'
 Plugin 'kien/ctrlp.vim'
 
 " Git integration
