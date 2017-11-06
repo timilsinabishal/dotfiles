@@ -15,6 +15,7 @@ Plugin 'tpope/vim-fugitive'
 " Programming
 Plugin 'valloric/youcompleteme'
 Plugin 'pangloss/vim-javascript'
+Plugin 'mxw/vim-jsx'
 "Plugin 'scrooloose/syntastic'
 Plugin 'editorconfig/editorconfig-vim'
 Plugin 'w0rp/ale'
@@ -62,7 +63,7 @@ map <c-n> :NERDTreeToggle<CR>
 " Ale configuration "{{{
 let g:ale_fixers = {
 \   'javascript': ['eslint'],
-\   'python': ['pylin'],
+\   'python': ['pylint'],
 \   'php': ['phpcs', 'phpmd']
 \}
 
@@ -107,6 +108,8 @@ let g:javascript_plugin_jsdoc = 1
 let g:javascript_plugin_flow = 1
 set foldmethod=syntax
 set foldlevelstart=99
+" for jsx
+let g:jsx_ext_required = 0 "allow jsx in js files
 " }}}
 
 " CtrlP specific "{{{
