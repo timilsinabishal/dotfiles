@@ -29,8 +29,8 @@ export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
 # map caps as ctrl in long press and esc in short press
 
 #set caps as esc long cap as control
-setxkbmap -option 'caps:ctrl_modifier'
-xcape -e 'Caps_Lock=Escape' -t 100
+#setxkbmap -option 'caps:ctrl_modifier'
+#xcape -e 'Caps_Lock=Escape' -t 100
 
 # config alias for dotfiles versioning
 alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
@@ -44,3 +44,6 @@ export ANDROID_HOME=$HOME/Android/Sdk
 export PATH=$PATH:$ANDROID_HOME/tools
 export PATH=$PATH:$ANDROID_HOME/platform-tools
 export PATH=$PATH:$HOME/miniconda3/bin
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
