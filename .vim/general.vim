@@ -31,7 +31,13 @@ set ruler "set ruler
 set nowrap "disable wrapping of lines
 
 " Use vim with clipboard support for this to work
-set clipboard=unnamedplus
+if system('uname -s') == "Darwin\n"
+  "OSX
+  set clipboard=unnamed 
+else
+  "Linux
+  set clipboard=unnamedplus
+endif
 
 " Enable ignorecase when searching
 set ignorecase

@@ -40,10 +40,15 @@ alias ssh="sshrc"
 alias copy="xclip -selection c"
 
 #android
-export ANDROID_HOME=$HOME/Android/Sdk
+export ANDROID_HOME=$HOME/Library/Android/sdk
 export PATH=$PATH:$ANDROID_HOME/tools
 export PATH=$PATH:$ANDROID_HOME/platform-tools
 export PATH=$PATH:$HOME/miniconda3/bin
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+
+export PATH=~/.local/bin:$PATH
+# added by Anaconda3 5.0.1 installer
+# export PATH="/Users/bishal/anaconda3/bin:$PATH"
+alias composer="php /usr/local/bin/composer.phar"
