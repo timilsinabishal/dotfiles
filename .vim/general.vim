@@ -3,8 +3,8 @@ inoremap jj <ESC>
 inoremap jk <ESC> 
 set number "show number of line
 set relativenumber "show relative number
-set shiftwidth=4
-set softtabstop=4
+set shiftwidth=2
+set softtabstop=2
 set expandtab "use space for tab
 set autoindent
 set smartindent
@@ -53,6 +53,9 @@ map <C-h> <C-w>h
 map <C-j> <C-w>j
 map <C-k> <C-w>k
 map <C-l> <C-w>l
+
+nnoremap t gt
+nnoremap T gT
 
 " Easier tab navigation
 
