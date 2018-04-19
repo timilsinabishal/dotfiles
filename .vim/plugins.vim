@@ -23,6 +23,11 @@ Plugin 'vim-airline/vim-airline' "also integrates with ale
 Plugin 'airblade/vim-gitgutter'
 Plugin 'tpope/vim-surround'
 
+" Snipplets
+Plugin 'SirVer/ultisnips'
+" Snipplets list
+Plugin 'honza/vim-snippets'
+
 " Integration with tmux
 Plugin 'tmux-plugins/vim-tmux-focus-events'
 
@@ -130,4 +135,11 @@ let g:ctrlp_custom_ignore = {
 " Close preview afer insertion
 let g:ycm_autoclose_preview_window_after_insertion = 1
 let g:ycm_autoclose_preview_window_after_completion = 1
+" }}}
+
+" UltiSnipplet specific "{{{
+" Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
+let g:UltiSnipsExpandTrigger="<c-o>"
+let g:UltiSnipsJumpForwardTrigger="<c-b>"
+let g:UltiSnipsJumpBackwardTrigger="<c-z>"
 " }}}
