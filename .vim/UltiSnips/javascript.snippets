@@ -1,0 +1,25 @@
+snippet todo "TODO reminder" b
+    # TODO(`echo $USER`): ${1:desc} `!v strftime("%c")`
+endsnippet
+
+snippet rnc "React Native Component" b
+import React, { Component } from 'react';
+import { View, Text, StyleSheet } from 'react-native';
+
+const styles = StyleSheet.create({
+  container: {
+  }
+});
+
+class ${1:MyComponent} extends Component {
+  render() {
+    return (
+      <View style={styles.container}>
+	$0
+      </View>
+    );
+  }
+}
+
+export default $1;
+endsnippet
