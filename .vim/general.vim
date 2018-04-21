@@ -1,6 +1,7 @@
 " General "{{{
 inoremap jj <ESC> 
 inoremap jk <ESC> 
+let mapleader=" "
 set number "show number of line
 set relativenumber "show relative number
 set shiftwidth=2
@@ -60,3 +61,6 @@ nnoremap T gT
 " Easier tab navigation
 
 " }}}
+
+" Auto reload vimrc on change
+autocmd! BufWritePost .vimrc source %

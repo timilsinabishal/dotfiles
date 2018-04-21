@@ -1,5 +1,6 @@
 " Plugins "{{{
 set rtp+=~/.vim/bundle/Vundle.vim " add run time path
+set rtp+=/usr/local/opt/fzf
 call vundle#begin()
 
 Plugin 'VundleVim/Vundle.vim'
@@ -8,19 +9,21 @@ Plugin 'VundleVim/Vundle.vim'
 Plugin 'scrooloose/nerdtree'
 Plugin 'Xuyuanp/nerdtree-git-plugin'
 Plugin 'kien/ctrlp.vim'
+Plugin 'mbbill/undotree'
+Plugin 'junegunn/fzf.vim'
+Plugin 'easymotion/vim-easymotion'
 
 " Git integration
 Plugin 'tpope/vim-fugitive'
+Plugin 'airblade/vim-gitgutter'
 
 " Programming
 Plugin 'valloric/youcompleteme'
 Plugin 'pangloss/vim-javascript'
 Plugin 'mxw/vim-jsx'
-"Plugin 'scrooloose/syntastic'
 Plugin 'editorconfig/editorconfig-vim'
 Plugin 'w0rp/ale'
 Plugin 'vim-airline/vim-airline' "also integrates with ale
-Plugin 'airblade/vim-gitgutter'
 Plugin 'tpope/vim-surround'
 
 " Snipplets
@@ -30,7 +33,6 @@ Plugin 'honza/vim-snippets'
 
 " Integration with tmux
 Plugin 'tmux-plugins/vim-tmux-focus-events'
-
 " Experimental for working with laravel
 "Plugin 'Shougo/vimproc'
 "Plugin 'Shougo/unite.vim'
@@ -48,6 +50,8 @@ filetype plugin indent on
 
 
 " Vim-gutter configuration "{{{
+set updatetime=400
+let g:gitgutter_enabled = 1
 let g:gitgutter_max_signs = 1000  " default value
 " }}}
 
@@ -82,28 +86,6 @@ let g:airline#extensions#ale#enabled = 1
 " Vim airline configuration "{{{
 " }}}
 
-" Syntastic configuration "{{{
-"let g:syntastic_javascript_checkers = ['eslint']
-"let g:syntastic_python_checkers = ['pylint']
-"let g:syntastic_php_checkers = ["php", "phpcs", "phpmd"]
-"
-"set statusline+=%#warningmsg#
-"set statusline+=%{SyntasticStatuslineFlag()}
-"set statusline+=%*
-"
-"let g:syntastic_always_populate_loc_list = 1
-"let g:syntastic_auto_loc_list = 1
-"let g:syntastic_check_on_open = 1
-"let g:syntastic_check_on_wq = 0
-"
-"" aggregate errors from all checkers for a file type
-"let g:syntastic_aggregate_errors = 1
-"" automatically open and close error list when an error is detected
-"let g:syntastic_always_populate_loc_list = 1
-"" number of lines of errors in syntastic
-"let g:syntastic_loc_list_height=5
-" }}}
-"
 " Editorconfig "{{{
 let g:EditorConfig_exec_path = '/usr/bin/editorconfig'
 " }}}
@@ -133,13 +115,46 @@ let g:ctrlp_custom_ignore = {
 
 " YouCompleteMe specific "{{{
 " Close preview afer insertion
-let g:ycm_autoclose_preview_window_after_insertion = 1
-let g:ycm_autoclose_preview_window_after_completion = 1
+"t g:ycm_autoclose_preview_window_after_insertion = 1
+"t g:ycm_autoclose_preview_window_after_completion = 1
 " }}}
 
 " UltiSnipplet specific "{{{
 " Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
-let g:UltiSnipsExpandTrigger="<c-o>"
-let g:UltiSnipsJumpForwardTrigger="<c-b>"
-let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+" UltiSnips triggering
+let g:UltiSnipsExpandTrigger = '<C-j>'
+let g:UltiSnipsJumpForwardTrigger = '<C-j>'
+let g:UltiSnipsJumpBackwardTrigger = '<C-k>'
+
+let g:UltiSnipsSnippetDirectories = ['~/.vim/UltiSnips', 'UltiSnips']
 " }}}
+
+" UndoTree specific "{{{
+nnoremap <c-t> :UndotreeToggle<cr>
+" }}}
+
+"FZF specific "{{{
+" [Buffers] Jump to the existing window if possible
+let g:fzf_buffers_jump = 1
+
+" [[B]Commits] Customize the options used by 'git log':
+let g:fzf_commits_log_options = '--graph --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr"'
+
+" [Tags] Command to generate tags file
+let g:fzf_tags_command = 'ctags -R'
+
+" [Commands] --expect expression for directly executing the command
+let g:fzf_commands_expect = 'alt-enter,ctrl-x'
+" }}}
+
+" Easymotion Specific "{{{
+let g:EasyMotion_do_mapping = 1 " Enable default mappings (is enabled by default)
+
+" Turn on case insensitive feature
+let g:EasyMotion_smartcase = 1
+
+" JK motions: Line motions
+map <Leader>j <Plug>(easymotion-j)
+map <Leader>k <Plug>(easymotion-k)
+map <Leader>w <Plug>(easymotion-k)
+" "}}}

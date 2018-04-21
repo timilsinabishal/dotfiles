@@ -55,3 +55,5 @@ export PATH=~/.local/bin:$PATH
 # added by Anaconda3 5.0.1 installer
 # export PATH="/Users/bishal/anaconda3/bin:$PATH"
 alias composer="php /usr/local/bin/composer.phar"
+
+export FZF_DEFAULT_OPTS='--height 40% --reverse --border'

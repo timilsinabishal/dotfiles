@@ -98,3 +98,4 @@ if [ -f '/Users/bishal/google-cloud-sdk/path.zsh.inc' ]; then source '/Users/bis
 
 # The next line enables shell command completion for gcloud.
 if [ -f '/Users/bishal/google-cloud-sdk/completion.zsh.inc' ]; then source '/Users/bishal/google-cloud-sdk/completion.zsh.inc'; fi
+export PATH="/usr/local/sbin:$PATH"
