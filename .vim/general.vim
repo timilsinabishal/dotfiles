@@ -55,6 +55,8 @@ map <C-j> <C-w>j
 map <C-k> <C-w>k
 map <C-l> <C-w>l
 
+map <leader>p :bprevious<CR>
+map <leader>n :bnext<CR>
 nnoremap t gt
 nnoremap T gT
 

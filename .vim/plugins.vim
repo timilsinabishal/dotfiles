@@ -12,19 +12,23 @@ Plugin 'kien/ctrlp.vim'
 Plugin 'mbbill/undotree'
 Plugin 'junegunn/fzf.vim'
 Plugin 'easymotion/vim-easymotion'
+Plugin 'ap/vim-css-color'
+Plugin 'tpope/vim-sleuth' " heuristics indentation
+Plugin 'vim-airline/vim-airline' "also integrates with ale
+Plugin 'tpope/vim-surround'
+Plugin 'tpope/vim-sensible'
 
 " Git integration
 Plugin 'tpope/vim-fugitive'
 Plugin 'airblade/vim-gitgutter'
 
-" Programming
+" Languages
 Plugin 'valloric/youcompleteme'
 Plugin 'pangloss/vim-javascript'
 Plugin 'mxw/vim-jsx'
-Plugin 'editorconfig/editorconfig-vim'
 Plugin 'w0rp/ale'
-Plugin 'vim-airline/vim-airline' "also integrates with ale
-Plugin 'tpope/vim-surround'
+Plugin 'mattn/emmet-vim'
+Plugin 'editorconfig/editorconfig-vim'
 
 " Snipplets
 Plugin 'SirVer/ultisnips'
@@ -149,12 +153,19 @@ let g:fzf_commands_expect = 'alt-enter,ctrl-x'
 
 " Easymotion Specific "{{{
 let g:EasyMotion_do_mapping = 1 " Enable default mappings (is enabled by default)
-
 " Turn on case insensitive feature
 let g:EasyMotion_smartcase = 1
 
-" JK motions: Line motions
-map <Leader>j <Plug>(easymotion-j)
-map <Leader>k <Plug>(easymotion-k)
-map <Leader>w <Plug>(easymotion-k)
-" "}}}
+map <leader><leader> <Plug>(easymotion-prefix)
+
+" <leader>f{char} to move to {char}
+map  <leader>f <Plug>(easymotion-bd-f)
+nmap <leader>f <Plug>(easymotion-overwin-f)
+
+" Move to word
+map  <leader>w <Plug>(easymotion-bd-w)
+nmap <leader>w <Plug>(easymotion-overwin-w)
+
+" s{char}{char} to move to {char}{char}
+nmap <leader>s <Plug>(easymotion-overwin-f2)
+" }}}
