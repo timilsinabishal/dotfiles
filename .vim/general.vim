@@ -1,7 +1,7 @@
 " General "{{{
 inoremap jj <ESC> 
 inoremap jk <ESC> 
-let mapleader=" "
+let mapleader = "\<Space>"
 set number "show number of line
 set relativenumber "show relative number
 set shiftwidth=2
@@ -35,6 +35,7 @@ set nowrap "disable wrapping of lines
 if system('uname -s') == "Darwin\n"
   "OSX
   set clipboard=unnamed 
+  :autocmd BufEnter *.png,*.jpg,*gif exec "! ~/.iterm2/imgcat ".expand("%") | :bw
 else
   "Linux
   set clipboard=unnamedplus

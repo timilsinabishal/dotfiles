@@ -1,53 +1,66 @@
+" To install vim plug run  curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+"    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 " Plugins "{{{
-set rtp+=~/.vim/bundle/Vundle.vim " add run time path
 set rtp+=/usr/local/opt/fzf
-call vundle#begin()
-
-Plugin 'VundleVim/Vundle.vim'
+call plug#begin('~/.vim/plugged')
 
 " Utility
-Plugin 'scrooloose/nerdtree'
-Plugin 'Xuyuanp/nerdtree-git-plugin'
-Plugin 'kien/ctrlp.vim'
-Plugin 'mbbill/undotree'
-Plugin 'junegunn/fzf.vim'
-Plugin 'easymotion/vim-easymotion'
-Plugin 'ap/vim-css-color'
-Plugin 'tpope/vim-sleuth' " heuristics indentation
-Plugin 'vim-airline/vim-airline' "also integrates with ale
-Plugin 'tpope/vim-surround'
-Plugin 'tpope/vim-sensible'
+Plug 'scrooloose/nerdtree'
+Plug 'Xuyuanp/nerdtree-git-plugin'
+Plug 'kien/ctrlp.vim'
+Plug 'mbbill/undotree'
+Plug '/usr/local/opt/fzf'
+Plug 'junegunn/fzf.vim'
+Plug 'easymotion/vim-easymotion'
+Plug 'ap/vim-css-color'
+Plug 'tpope/vim-sleuth' " heuristics indentation
+Plug 'vim-airline/vim-airline' "also integrates with ale
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-sensible'
 
 " Git integration
-Plugin 'tpope/vim-fugitive'
-Plugin 'airblade/vim-gitgutter'
+Plug 'tpope/vim-fugitive'
+Plug 'airblade/vim-gitgutter'
 
 " Languages
-Plugin 'valloric/youcompleteme'
-Plugin 'pangloss/vim-javascript'
-Plugin 'mxw/vim-jsx'
-Plugin 'w0rp/ale'
-Plugin 'mattn/emmet-vim'
-Plugin 'editorconfig/editorconfig-vim'
+function! BuildYCM(info)
+  " info is a dictionary with 3 fields
+  " - name:   name of the plugin
+  " - status: 'installed', 'updated', or 'unchanged'
+  " - force:  set on PlugInstall! or PlugUpdate!
+  if a:info.status == 'installed' || a:info.force
+    !./install.py
+  endif
+endfunction
+Plug 'Valloric/YouCompleteMe', { 'do': function('BuildYCM') }
+
+Plug 'pangloss/vim-javascript'
+Plug 'mxw/vim-jsx'
+Plug 'w0rp/ale'
+Plug 'mattn/emmet-vim'
+Plug 'editorconfig/editorconfig-vim'
+Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
 
 " Snipplets
-Plugin 'SirVer/ultisnips'
+Plug 'SirVer/ultisnips'
 " Snipplets list
-Plugin 'honza/vim-snippets'
+Plug 'honza/vim-snippets'
 
 " Integration with tmux
-Plugin 'tmux-plugins/vim-tmux-focus-events'
+Plug 'tmux-plugins/vim-tmux-focus-events'
 " Experimental for working with laravel
-"Plugin 'Shougo/vimproc'
-"Plugin 'Shougo/unite.vim'
-"Plugin 'shawncplus/phpcomplete.vim'
-"Plugin 'm2mdas/phpcomplete-extended'
-"Plugin 'm2mdas/phpcomplete-extended-laravel'
+"Plug 'Shougo/vimproc'
+"Plug 'Shougo/unite.vim'
+"Plug 'shawncplus/phpcomplete.vim'
+"Plug 'm2mdas/phpcomplete-extended'
+"Plug 'm2mdas/phpcomplete-extended-laravel'
 
 " Color Schemes
-Plugin 'altercation/vim-colors-solarized'
+Plug 'altercation/vim-colors-solarized'
 
-call vundle#end()
+call plug#end()
+" Automatic PlugUpgrade
+delc PlugUpgrade
 filetype plugin indent on
 
 " }}}
@@ -156,16 +169,24 @@ let g:EasyMotion_do_mapping = 1 " Enable default mappings (is enabled by default
 " Turn on case insensitive feature
 let g:EasyMotion_smartcase = 1
 
-map <leader><leader> <Plug>(easymotion-prefix)
+map <Leader><Leader> <Plug>(easymotion-prefix)
+
+" JK motions: Line motions
+map <Leader>j <Plug>(easymotion-j)
+map <Leader>k <Plug>(easymotion-k)
 
 " <leader>f{char} to move to {char}
-map  <leader>f <Plug>(easymotion-bd-f)
-nmap <leader>f <Plug>(easymotion-overwin-f)
+map  <Leader>f <Plug>(easymotion-bd-f)
+nmap <Leader>f <Plug>(easymotion-overwin-f)
 
 " Move to word
-map  <leader>w <Plug>(easymotion-bd-w)
-nmap <leader>w <Plug>(easymotion-overwin-w)
+map  <Leader>w <Plug>(easymotion-bd-w)
+nmap <Leader>w <Plug>(easymotion-overwin-w)
 
 " s{char}{char} to move to {char}{char}
-nmap <leader>s <Plug>(easymotion-overwin-f2)
+nmap <Leader>s <Plug>(easymotion-overwin-f2)
+" }}}
+
+" Misc {{{
+autocmd FileType css set omnifunc=csscomplete#CompleteCSS
 " }}}
