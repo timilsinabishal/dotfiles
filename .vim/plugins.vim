@@ -33,7 +33,8 @@ function! BuildYCM(info)
   endif
 endfunction
 Plug 'Valloric/YouCompleteMe', { 'do': function('BuildYCM') }
-
+Plug 'python-mode/python-mode', { 'branch': 'develop' }
+Plug 'tweekmonster/django-plus.vim'
 Plug 'pangloss/vim-javascript'
 Plug 'mxw/vim-jsx'
 Plug 'w0rp/ale'
@@ -89,7 +90,7 @@ map <c-n> :NERDTreeToggle<CR>
 " Ale configuration "{{{
 let g:ale_fixers = {
 \   'javascript': ['eslint'],
-\   'python': ['pylint'],
+\   'python': ['autopep8'],
 \   'php': ['phpcs', 'phpmd']
 \}
 
@@ -132,8 +133,13 @@ let g:ctrlp_custom_ignore = {
 
 " YouCompleteMe specific "{{{
 " Close preview afer insertion
-"t g:ycm_autoclose_preview_window_after_insertion = 1
-"t g:ycm_autoclose_preview_window_after_completion = 1
+let g:ycm_autoclose_preview_window_after_insertion = 1
+let g:ycm_autoclose_preview_window_after_completion = 1
+let g:ycm_python_binary_path = 'python'
+" }}}
+
+" Pythonmode specific "{{{
+let g:pymode_python = 'python3'
 " }}}
 
 " UltiSnipplet specific "{{{
