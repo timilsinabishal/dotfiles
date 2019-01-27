@@ -85,6 +85,8 @@ autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 " Map to open Nerdtree
 map <c-n> :NERDTreeToggle<CR>
+" Mirror nerdtree
+autocmd BufWinEnter * NERDTreeMirror
 " }}}
 
 " Ale configuration "{{{
@@ -94,11 +96,13 @@ let g:ale_fixers = {
 \   'php': ['phpcs', 'phpmd']
 \}
 
+let g:ale_linters = {
+\   'javascript': ['eslint'],
+\}
 " Set this setting in vimrc if you want to fix files automatically on save.
 " This is off by default.
 let g:ale_fix_on_save = 1
 let g:airline#extensions#ale#enabled = 1
-
 " }}}
 
 " Vim airline configuration "{{{
@@ -135,11 +139,18 @@ let g:ctrlp_custom_ignore = {
 " Close preview afer insertion
 let g:ycm_autoclose_preview_window_after_insertion = 1
 let g:ycm_autoclose_preview_window_after_completion = 1
-let g:ycm_python_binary_path = 'python'
+let g:ycm_python_binary_path = 'python3'
+let g:ycm_server_use_vim_stdout = 1
+let g:ycm_server_log_level = 'debug'
 " }}}
 
 " Pythonmode specific "{{{
 let g:pymode_python = 'python3'
+augroup unset_folding_in_insert_mode
+    autocmd!
+    autocmd InsertEnter *.py setlocal foldmethod=marker
+    autocmd InsertLeave *.py setlocal foldmethod=expr
+augroup END
 " }}}
 
 " UltiSnipplet specific "{{{
