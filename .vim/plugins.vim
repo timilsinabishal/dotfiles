@@ -7,7 +7,6 @@ call plug#begin('~/.vim/plugged')
 " Utility
 Plug 'scrooloose/nerdtree'
 Plug 'Xuyuanp/nerdtree-git-plugin'
-Plug 'kien/ctrlp.vim'
 Plug 'mbbill/undotree'
 Plug '/usr/local/opt/fzf'
 Plug 'junegunn/fzf.vim'
@@ -17,6 +16,7 @@ Plug 'tpope/vim-sleuth' " heuristics indentation
 Plug 'vim-airline/vim-airline' "also integrates with ale
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-sensible'
+Plug 'vim-scripts/largefile'
 
 " Git integration
 Plug 'tpope/vim-fugitive'
@@ -66,6 +66,8 @@ filetype plugin indent on
 
 " }}}
 
+" Define large file size (mb)
+let g:LargeFile = 2
 
 " Vim-gutter configuration "{{{
 set updatetime=400
@@ -92,12 +94,13 @@ autocmd BufWinEnter * NERDTreeMirror
 " Ale configuration "{{{
 let g:ale_fixers = {
 \   'javascript': ['eslint'],
-\   'python': ['autopep8'],
+\   'python': ['autopep8', 'yapf'],
 \   'php': ['phpcs', 'phpmd']
 \}
 
 let g:ale_linters = {
 \   'javascript': ['eslint'],
+\   'python': ['flake8'],
 \}
 " Set this setting in vimrc if you want to fix files automatically on save.
 " This is off by default.
@@ -168,6 +171,10 @@ nnoremap <c-t> :UndotreeToggle<cr>
 " }}}
 
 "FZF specific "{{{
+nnoremap <silent> <expr> <c-p> (expand('%') =~ 'NERD_tree' ? "\<c-w>\<c-w>" : '').":Ag\<cr>"
+nnoremap <silent> <expr> <c-b> (expand('%') =~ 'NERD_tree' ? "\<c-w>\<c-w>" : '').":Buffers\<cr>"
+
+let $FZF_DEFAULT_COMMAND = 'ag -g ""'
 " [Buffers] Jump to the existing window if possible
 let g:fzf_buffers_jump = 1
 
