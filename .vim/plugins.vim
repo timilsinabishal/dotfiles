@@ -161,7 +161,16 @@ let g:ycm_server_log_level = 'debug'
 
 " Deoplete "{{{
 let g:deoplete#enable_at_startup = 1
-let g:deoplete#auto_complete=1
+let g:deoplete#auto_complete = 1
+let g:deoplete#enable_smart_case = 1
+let g:deoplete#sources#ternjs#docs = 1
+let g:deoplete#sources#ternjs#types = 1
+let g:deoplete#sources#jedi#show_docstring = 1
+let g:deoplete#sources#jedi#docs = 1
+let g:jedi#smart_auto_mappings = 1
+let g:deoplete#enable_auto_close_preview = 1
+" close preview window on leaving the insert mode
+autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
 " }}}
 
 " Pythonmode specific "{{{
