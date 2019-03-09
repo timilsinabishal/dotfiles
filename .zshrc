@@ -112,3 +112,6 @@ test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell
 
 it2prof() { echo -e "\033]50;SetProfile=$1\a" }
 
+export GOPATH="${HOME}/go"
+export GOROOT="$(brew --prefix golang)/libexec"
+export PATH="$PATH:${GOPATH}/bin:${GOROOT}/bin"

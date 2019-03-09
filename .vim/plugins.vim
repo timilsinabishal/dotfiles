@@ -32,8 +32,14 @@ function! BuildYCM(info)
     !./install.py
   endif
 endfunction
-Plug 'Valloric/YouCompleteMe', { 'do': function('BuildYCM') }
-Plug 'python-mode/python-mode', { 'branch': 'develop' }
+if has('nvim')
+  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+  Plug 'carlitux/deoplete-ternjs', { 'do': 'npm install -g tern' }
+  Plug 'deoplete-plugins/deoplete-jedi'
+else
+  Plug 'Valloric/YouCompleteMe', { 'do': function('BuildYCM') }
+  Plug 'python-mode/python-mode', { 'branch': 'develop' }
+endif
 Plug 'tweekmonster/django-plus.vim'
 Plug 'pangloss/vim-javascript'
 Plug 'mxw/vim-jsx'
@@ -66,6 +72,12 @@ filetype plugin indent on
 
 " }}}
 
+" Neovim/vim specific "{{{
+if has('nvim')
+else
+endif
+" }}}
+"
 " Define large file size (mb)
 let g:LargeFile = 2
 
@@ -94,7 +106,7 @@ autocmd BufWinEnter * NERDTreeMirror
 " Ale configuration "{{{
 let g:ale_fixers = {
 \   'javascript': ['eslint'],
-\   'python': ['autopep8', 'yapf'],
+\   'python': ['autopep8'],
 \   'php': ['phpcs', 'phpmd']
 \}
 
@@ -147,6 +159,11 @@ let g:ycm_server_use_vim_stdout = 1
 let g:ycm_server_log_level = 'debug'
 " }}}
 
+" Deoplete "{{{
+let g:deoplete#enable_at_startup = 1
+let g:deoplete#auto_complete=1
+" }}}
+
 " Pythonmode specific "{{{
 let g:pymode_python = 'python3'
 augroup unset_folding_in_insert_mode
@@ -174,7 +191,7 @@ nnoremap <c-t> :UndotreeToggle<cr>
 nnoremap <silent> <expr> <c-p> (expand('%') =~ 'NERD_tree' ? "\<c-w>\<c-w>" : '').":Ag\<cr>"
 nnoremap <silent> <expr> <c-b> (expand('%') =~ 'NERD_tree' ? "\<c-w>\<c-w>" : '').":Buffers\<cr>"
 
-let $FZF_DEFAULT_COMMAND = 'ag -g ""'
+let $FZF_DEFAULT_COMMAND = 'ag --hidden --ignore .git -g ""'
 " [Buffers] Jump to the existing window if possible
 let g:fzf_buffers_jump = 1
 
@@ -210,6 +227,9 @@ nmap <Leader>w <Plug>(easymotion-overwin-w)
 " s{char}{char} to move to {char}{char}
 nmap <Leader>s <Plug>(easymotion-overwin-f2)
 " }}}
+
+" <TAB>: completion.
+inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
 
 " Misc {{{
 autocmd FileType css set omnifunc=csscomplete#CompleteCSS
