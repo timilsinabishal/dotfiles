@@ -36,9 +36,13 @@ if has('nvim')
   Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
   Plug 'carlitux/deoplete-ternjs', { 'do': 'npm install -g tern' }
   Plug 'deoplete-plugins/deoplete-jedi'
+  Plug 'autozimu/LanguageClient-neovim', {
+    \ 'branch': 'next',
+    \ 'do': 'bash install.sh',
+    \ }
 else
   Plug 'Valloric/YouCompleteMe', { 'do': function('BuildYCM') }
-  Plug 'python-mode/python-mode', { 'branch': 'develop' }
+  " Plug 'python-mode/python-mode', { 'branch': 'develop' }
 endif
 Plug 'tweekmonster/django-plus.vim'
 Plug 'pangloss/vim-javascript'
@@ -47,6 +51,7 @@ Plug 'w0rp/ale'
 Plug 'mattn/emmet-vim'
 Plug 'editorconfig/editorconfig-vim'
 Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
+Plug 'lumiliet/vim-twig'
 
 " Snipplets
 Plug 'SirVer/ultisnips'
@@ -74,6 +79,17 @@ filetype plugin indent on
 
 " Neovim/vim specific "{{{
 if has('nvim')
+  " Required for operations modifying multiple buffers like rename.
+  set hidden
+
+  let g:LanguageClient_serverCommands = {
+	\    'python': ['pyls', '-v'],
+	\    'javascript': ['javascript-typescript-stdio'],
+	\    'javascript.jsx': ['javascript-typescript-stdio'],
+	\ }
+  nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
+  nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
+  nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
 else
 endif
 " }}}
@@ -107,12 +123,16 @@ autocmd BufWinEnter * NERDTreeMirror
 let g:ale_fixers = {
 \   'javascript': ['eslint'],
 \   'python': ['autopep8'],
-\   'php': ['phpcs', 'phpmd']
+\   'php': ['phpcs', 'phpmd'],
+\   'scss': ['stylelint'],
+\   'css': ['stylelint'],
 \}
 
 let g:ale_linters = {
 \   'javascript': ['eslint'],
 \   'python': ['flake8'],
+\   'scss': ['stylelint'],
+\   'css': ['stylelint'],
 \}
 " Set this setting in vimrc if you want to fix files automatically on save.
 " This is off by default.

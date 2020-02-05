@@ -52,6 +52,7 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 
 export PATH=~/.local/bin:$PATH
+export PATH=~/.composer/vendor/bin/:$PATH
 # added by Anaconda3 5.0.1 installer
 # export PATH="/Users/bishal/anaconda3/bin:$PATH"
 alias composer="php /usr/local/bin/composer.phar"
