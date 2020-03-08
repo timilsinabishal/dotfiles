@@ -52,6 +52,7 @@ Plug 'mattn/emmet-vim'
 Plug 'editorconfig/editorconfig-vim'
 Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
 Plug 'lumiliet/vim-twig'
+Plug 'scrooloose/nerdcommenter'
 
 " Snipplets
 Plug 'SirVer/ultisnips'
@@ -122,7 +123,7 @@ autocmd BufWinEnter * NERDTreeMirror
 " Ale configuration "{{{
 let g:ale_fixers = {
 \   'javascript': ['eslint'],
-\   'python': ['autopep8'],
+\   'python': ['autopep8', 'isort'],
 \   'php': ['phpcs', 'phpmd'],
 \   'scss': ['stylelint'],
 \   'css': ['stylelint'],
@@ -130,7 +131,7 @@ let g:ale_fixers = {
 
 let g:ale_linters = {
 \   'javascript': ['eslint'],
-\   'python': ['flake8'],
+\   'python': ['flake8', 'isort'],
 \   'scss': ['stylelint'],
 \   'css': ['stylelint'],
 \}
