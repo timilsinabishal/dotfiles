@@ -58,3 +58,7 @@ export PATH=~/.composer/vendor/bin/:$PATH
 alias composer="php /usr/local/bin/composer.phar"
 
 export FZF_DEFAULT_OPTS='--height 40% --reverse --border'
+PATH=$PATH:/opt/metasploit-framework/bin
+export PATH=$PATH:/opt/metasploit-framework/bin
+
+export PATH="$HOME/.poetry/bin:$PATH"

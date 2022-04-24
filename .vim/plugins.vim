@@ -22,6 +22,9 @@ Plug 'vim-scripts/largefile'
 Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
 
+" Productivity
+Plug 'wakatime/vim-wakatime'
+
 " Languages
 function! BuildYCM(info)
   " info is a dictionary with 3 fields
@@ -123,7 +126,7 @@ autocmd BufWinEnter * NERDTreeMirror
 " Ale configuration "{{{
 let g:ale_fixers = {
 \   'javascript': ['eslint'],
-\   'python': ['autopep8', 'isort'],
+\   'python': ['autopep8', 'black'],
 \   'php': ['phpcs', 'phpmd'],
 \   'scss': ['stylelint'],
 \   'css': ['stylelint'],
@@ -131,7 +134,7 @@ let g:ale_fixers = {
 
 let g:ale_linters = {
 \   'javascript': ['eslint'],
-\   'python': ['flake8', 'isort'],
+\   'python': ['flake8', 'black'],
 \   'scss': ['stylelint'],
 \   'css': ['stylelint'],
 \}
@@ -139,6 +142,7 @@ let g:ale_linters = {
 " This is off by default.
 let g:ale_fix_on_save = 1
 let g:airline#extensions#ale#enabled = 1
+let g:ale_python_black_options  = '-S'
 " }}}
 
 " Vim airline configuration "{{{
