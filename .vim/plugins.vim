@@ -36,20 +36,31 @@ function! BuildYCM(info)
   endif
 endfunction
 if has('nvim')
-  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-  Plug 'carlitux/deoplete-ternjs', { 'do': 'npm install -g tern' }
-  Plug 'deoplete-plugins/deoplete-jedi'
-  Plug 'autozimu/LanguageClient-neovim', {
-    \ 'branch': 'next',
-    \ 'do': 'bash install.sh',
-    \ }
+  " LSP support
+  Plug 'neovim/nvim-lspconfig'
+  Plug 'williamboman/nvim-lsp-installer'
+
+  "Autocompletion
+  Plug 'hrsh7th/cmp-nvim-lsp'
+  Plug 'hrsh7th/cmp-buffer'
+  Plug 'hrsh7th/cmp-path'
+  Plug 'hrsh7th/cmp-cmdline'
+  Plug 'hrsh7th/nvim-cmp'
+
+  " LuaSnip
+  Plug 'L3MON4D3/LuaSnip'
+  Plug 'saadparwaiz1/cmp_luasnip'
+
+  Plug 'VonHeikemen/lsp-zero.nvim'
 else
   Plug 'Valloric/YouCompleteMe', { 'do': function('BuildYCM') }
   " Plug 'python-mode/python-mode', { 'branch': 'develop' }
 endif
-Plug 'tweekmonster/django-plus.vim'
-Plug 'pangloss/vim-javascript'
-Plug 'mxw/vim-jsx'
+if !has('nvim')
+  Plug 'tweekmonster/django-plus.vim'
+  Plug 'pangloss/vim-javascript'
+  Plug 'mxw/vim-jsx'
+endif
 Plug 'w0rp/ale'
 Plug 'mattn/emmet-vim'
 Plug 'editorconfig/editorconfig-vim'
@@ -64,15 +75,17 @@ Plug 'honza/vim-snippets'
 
 " Integration with tmux
 Plug 'tmux-plugins/vim-tmux-focus-events'
-" Experimental for working with laravel
-"Plug 'Shougo/vimproc'
-"Plug 'Shougo/unite.vim'
-"Plug 'shawncplus/phpcomplete.vim'
-"Plug 'm2mdas/phpcomplete-extended'
-"Plug 'm2mdas/phpcomplete-extended-laravel'
 
 " Color Schemes
-Plug 'altercation/vim-colors-solarized'
+if has('nvim')
+  Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
+else
+  Plug 'altercation/vim-colors-solarized'
+endif
+" Code Highlighting
+if has('nvim')
+  Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+endif
 
 call plug#end()
 " Automatic PlugUpgrade
@@ -81,20 +94,60 @@ filetype plugin indent on
 
 " }}}
 
-" Neovim/vim specific "{{{
+" LSP Neovim/vim specific "{{{
 if has('nvim')
-  " Required for operations modifying multiple buffers like rename.
-  set hidden
+" Required for operations modifying multiple buffers like rename.  set hidden
+lua << EOF
+local lsp = require('lsp-zero')
 
-  let g:LanguageClient_serverCommands = {
-	\    'python': ['pyls', '-v'],
-	\    'javascript': ['javascript-typescript-stdio'],
-	\    'javascript.jsx': ['javascript-typescript-stdio'],
-	\ }
-  nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
-  nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
-  nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
-else
+lsp.preset('recommended')
+lsp.setup()
+
+lsp.ensure_installed({
+  'html',
+  'cssls',
+  'tsserver'
+})
+
+-- Key mappings
+
+local cmp = require("cmp")
+
+cmp.setup({
+  completion = {
+    completeopt = 'menu,menuone,noinsert'
+  },
+  mapping = {
+    ["<Tab>"] = cmp.mapping(function(fallback)
+      if cmp.visible() then
+        cmp.select_next_item()
+      elseif vim.fn["vsnip#available"](1) == 1 then
+        feedkey("<Plug>(vsnip-expand-or-jump)", "")
+      elseif has_words_before() then
+        cmp.complete()
+      else
+        fallback() -- The fallback function sends a already mapped key. In this case, it's probably `<Tab>`.
+      end
+    end, { "i", "s" }),
+
+    ["<S-Tab>"] = cmp.mapping(function()
+      if cmp.visible() then
+        cmp.select_prev_item()
+      elseif vim.fn["vsnip#jumpable"](-1) == 1 then
+        feedkey("<Plug>(vsnip-jump-prev)", "")
+      end
+    end, { "i", "s" }),
+
+    ["<CR>"] = cmp.mapping(function(fallback)
+      if cmp.visible() then
+	  cmp.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = false })
+      else
+	  fallback()
+      end
+    end, { "i", "s" }),
+  }
+})
+EOF
 endif
 " }}}
 "
@@ -267,4 +320,39 @@ inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
 
 " Misc {{{
 autocmd FileType css set omnifunc=csscomplete#CompleteCSS
+" }}}
+
+" TreeSitter {{{
+if has('nvim')
+
+let g:tokyonight_style = "night"
+colorscheme tokyonight
+
+lua << EOF
+require'nvim-treesitter.configs'.setup {
+  -- A list of parser names, or "all"
+  ensure_installed = { "python", "javascript", "bash", "comment", "css", "graphql", "jsdoc", "json", "latex", "lua", "php", "phpdoc", "regex", "scss", "tsx", "typescript", "vim", "yaml" },
+
+  -- Install parsers synchronously (only applied to `ensure_installed`)
+  sync_install = false,
+
+  highlight = {
+    -- `false` will disable the whole extension
+    enable = true,
+
+    -- NOTE: these are the names of the parsers and not the filetype. (for example if you want to
+    -- disable highlighting for the `tex` filetype, you need to include `latex` in this list as this is
+    -- the name of the parser)
+    -- list of language that will be disabled
+    disable = { "c", "rust" },
+
+    -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
+    -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
+    -- Using this option may slow down your editor, and you may see some duplicate highlights.
+    -- Instead of true it can also be a list of languages
+    additional_vim_regex_highlighting = false,
+  },
+}
+EOF
+endif
 " }}}

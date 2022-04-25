@@ -12,13 +12,12 @@ set t_Co=256
 set background=dark
 let g:solarized_termcolors=256
 let g:solarized_termtrans=1
-colo solarized
 
 " Presistent undo on files"{{{
 try
     set undodir=~/.vim_runtime/temp_dirs/undodir
     set undofile
-catch 
+catch
 endtry
 " }}}
 
@@ -30,5 +29,5 @@ set directory=~/.vim_runtime/temp_dirs/swapdir
 augroup reload_vimrc " {{{
     autocmd!
     autocmd BufWritePost $MYVIMRC source $MYVIMRC
-augroup END 
+augroup END
 " }}}

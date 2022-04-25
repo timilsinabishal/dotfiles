@@ -2,8 +2,8 @@ if has('python3')
   silent! python3 1
 endif
 " General "{{{
-inoremap jj <ESC> 
-inoremap jk <ESC> 
+inoremap jj <ESC>
+inoremap jk <ESC>
 let mapleader = "\<Space>"
 set number "show number of line
 set relativenumber "show relative number
@@ -37,7 +37,7 @@ set nowrap "disable wrapping of lines
 " Use vim with clipboard support for this to work
 if system('uname -s') == "Darwin\n"
   "OSX
-  set clipboard=unnamed 
+  set clipboard=unnamed
   :autocmd BufEnter *.png,*.jpg,*gif exec "! ~/.iterm2/imgcat ".expand("%") | :bw
 else
   "Linux
