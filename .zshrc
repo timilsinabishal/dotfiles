@@ -93,13 +93,17 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
+# Increase size of zsh history
+export HISTSIZE=1000000
+export SAVEHIST=$HISTSIZE
+setopt EXTENDED_HISTORY
+
 # The next line updates PATH for the Google Cloud SDK.
 if [ -f '/Users/bishal/google-cloud-sdk/path.zsh.inc' ]; then source '/Users/bishal/google-cloud-sdk/path.zsh.inc'; fi
 
 # The next line enables shell command completion for gcloud.
 if [ -f '/Users/bishal/google-cloud-sdk/completion.zsh.inc' ]; then source '/Users/bishal/google-cloud-sdk/completion.zsh.inc'; fi
 export PATH="/usr/local/sbin:$PATH"
-export PATH="~/Library/Python/3.6/bin:$PATH"
 
 # tabtab source for serverless package
 # uninstall by removing these lines or running `tabtab uninstall serverless`
@@ -112,22 +116,5 @@ test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell
 
 it2prof() { echo -e "\033]50;SetProfile=$1\a" }
 
-export GOPATH="${HOME}/go"
-export GOROOT="$(brew --prefix golang)/libexec"
 
-export PYENV_ROOT="$HOME/.pyenv"
-eval "$(pyenv init -)"
-eval "$(pyenv virtualenv-init -)"
-
-export PYTHON_CONFIGURE_OPTS="--enable-framework"
-
-export PATH="$PATH:${GOPATH}/bin:${GOROOT}/bin"
-export PATH="$HOME/.fastlane/bin:$PATH"
-export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
-export PATH="/usr/local/opt/php@7.3/bin:$PATH"
-export PATH="/usr/local/opt/ruby/bin:$PATH"
-export PATH="$HOME/.pyenv/bin:$PATH"
-export PATH="$HOME/.poetry/bin:$PATH"
-
-export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_152.jdk/Contents/Home
-export PATH=$JAVA_HOME/bin:$PATH
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion

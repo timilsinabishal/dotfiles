@@ -1,6 +1,3 @@
-if has('python3')
-  silent! python3 1
-endif
 " General "{{{
 inoremap jj <ESC>
 inoremap jk <ESC>
@@ -13,6 +10,9 @@ set expandtab "use space for tab
 set autoindent
 set smartindent
 
+" Filetype specific plugin and intent
+filetype plugin indent on
+
 " Enable detect of file change outside of vim
 set autoread
 au FocusGained,BufEnter * :checktime
@@ -23,6 +23,7 @@ cmap w!! w !sudo tee % >/dev/null
 " Enable mouse support
 set mouse=a
 
+" Turn syntax highlighting on.
 syntax on
 
 set incsearch "incremental search as you type
@@ -33,6 +34,8 @@ nnoremap <CR> :noh<CR><CR>
 
 set ruler "set ruler
 set nowrap "disable wrapping of lines
+
+set cursorline " highlight cursorline
 
 " Use vim with clipboard support for this to work
 if system('uname -s') == "Darwin\n"
@@ -64,9 +67,23 @@ map <leader>n :bnext<CR>
 nnoremap t gt
 nnoremap T gT
 
-" Easier tab navigation
+" Enable 256 colors in vim
+if has('termguicolors')
+  set termguicolors
+endif
 
-" }}}
+" Splitting a window will put the new window below the current one.
+set splitbelow
 
-" Auto reload vimrc on change
-autocmd! BufWritePost .vimrc source %
+" Splitting a window will put the new window right of the current one.
+set splitright
+
+set history=100 "increase history
+" Enable the marker method of folding.
+augroup filetype_vim
+  autocmd!
+  autocmd FileType vim setlocal foldmethod=marker
+augroup END
+
+" Set zsh as terminal emulator
+set shell=/usr/local/bin/zsh

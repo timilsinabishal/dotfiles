@@ -50,6 +50,7 @@ export ANDROID_SDK=$HOME/Library/Android/sdk
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+# [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 export PATH=~/.local/bin:$PATH
 export PATH=~/.composer/vendor/bin/:$PATH
@@ -61,4 +62,22 @@ export FZF_DEFAULT_OPTS='--height 40% --reverse --border'
 PATH=$PATH:/opt/metasploit-framework/bin
 export PATH=$PATH:/opt/metasploit-framework/bin
 
+export GOPATH="${HOME}/go"
+export GOROOT="$(brew --prefix golang)/libexec"
+
+export PYENV_ROOT="$HOME/.pyenv"
+eval "$(pyenv init -)"
+eval "$(pyenv virtualenv-init -)"
+
+export PYTHON_CONFIGURE_OPTS="--enable-framework"
+
+export PATH="$PATH:${GOPATH}/bin:${GOROOT}/bin"
+export PATH="$HOME/.fastlane/bin:$PATH"
+export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+export PATH="/usr/local/opt/php@7.3/bin:$PATH"
+export PATH="/usr/local/opt/ruby/bin:$PATH"
+export PATH="$HOME/.pyenv/bin:$PATH"
 export PATH="$HOME/.poetry/bin:$PATH"
+
+export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_152.jdk/Contents/Home
+export PATH=$JAVA_HOME/bin:$PATH
