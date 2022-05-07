@@ -29,6 +29,7 @@ Plug 'ap/vim-css-color' "preview color in code
 Plug 'tpope/vim-sleuth' " heuristics indentation
 if has('nvim')
   Plug 'nvim-lualine/lualine.nvim' "requires devicons
+  Plug 'akinsho/bufferline.nvim', { 'tag': 'v2.*' } " requires devicons
   Plug 'lukas-reineke/indent-blankline.nvim' " show indentation guides
   Plug 'RRethy/vim-illuminate' " highlight word/variable references
   Plug 'kosayoda/nvim-lightbulb'
@@ -120,7 +121,7 @@ Plug 'tmux-plugins/vim-tmux-focus-events'
 if has('nvim')
   Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
   Plug 'EdenEast/nightfox.nvim'
-  Plug 'mjlbach/onedark.nvim'
+  Plug 'navarasu/onedark.nvim'
 endif
 Plug 'sainnhe/sonokai'
 Plug 'altercation/vim-colors-solarized'
@@ -358,14 +359,29 @@ endif
 
 if has('nvim')
 lua << EOF
-  require('gitsigns').setup {
-    current_line_blame = true, -- Toggle with `:Gitsigns toggle_current_line_blame`
-    current_line_blame_opts = {
-      virt_text_pos = 'right_align', -- 'eol' | 'overlay' | 'right_align'
-      delay = 500,
-      ignore_whitespace = false,
-      },
-    }
+require('gitsigns').setup {
+  current_line_blame = true, -- Toggle with `:Gitsigns toggle_current_line_blame`
+  current_line_blame_opts = {
+    virt_text_pos = 'right_align', -- 'eol' | 'overlay' | 'right_align'
+    delay = 500,
+    ignore_whitespace = false,
+    },
+  current_line_blame_formatter = '<author>, <author_time:%Y-%m-%d>', -- <summary>', removed summary for long ones
+  on_attach = function(bufnr)
+    local gs = package.loaded.gitsigns
+
+    local function map(mode, l, r, opts)
+      opts = opts or {}
+      opts.buffer = bufnr
+      vim.keymap.set(mode, l, r, opts)
+    end
+    map('n', '<leader>hp', gs.preview_hunk)
+    map('n', '<leader>hb', function() gs.blame_line{full=true} end)
+    map('n', '<leader>tb', gs.toggle_current_line_blame)
+    map('n', '<leader>hd', gs.diffthis)
+    map('n', '<leader>hD', function() gs.diffthis('~') end)
+  end
+}
 EOF
 else
   " Vim-gutter configuration "{{{
@@ -383,7 +399,7 @@ endif
 " Change the "hint" color to the "orange" color, and make the "error" color bright red
 if has('nvim')
   let g:tokyonight_style = "night"
-  colorscheme onedark
+  colorscheme tokyonight
 endif
 " }}}
 
@@ -402,6 +418,14 @@ require'nvim-treesitter.configs'.setup {
     -- `false` will disable the whole extension
     enable = true,
   },
+  incremental_selection = {
+    enable = true,
+    keymaps = {
+      init_selection = ".",
+      node_incremental = ".",
+      node_decremental = ",",
+    },
+  },
   autotag = {
     -- enable auto closing and editing of html tags
     enable = true,
@@ -412,6 +436,41 @@ require'nvim-treesitter.configs'.setup {
   },
   context_commentstring = {
     enable = true
+  },
+  textobjects = {
+    select = {
+      enable = true,
+      lookahead = true, -- Automatically jump forward to textobj, similar to targets.vim
+      keymaps = {
+        -- You can use the capture groups defined in textobjects.scm
+        ['af'] = '@function.outer',
+        ['if'] = '@function.inner',
+        ['ac'] = '@class.outer',
+        ['ic'] = '@class.inner',
+        ['ib'] = '@block.inner',
+        ['ab'] = '@block.outer',
+      },
+    },
+    move = {
+      enable = true,
+      set_jumps = true, -- whether to set jumps in the jumplist
+      goto_next_start = {
+        [']m'] = '@function.outer',
+        [']]'] = '@class.outer',
+      },
+      goto_next_end = {
+        [']M'] = '@function.outer',
+        [']['] = '@class.outer',
+      },
+      goto_previous_start = {
+        ['[m'] = '@function.outer',
+        ['[['] = '@class.outer',
+      },
+      goto_previous_end = {
+        ['[M'] = '@function.outer',
+        ['[]'] = '@class.outer',
+      },
+    },
   }
 }
 EOF
@@ -423,18 +482,32 @@ set foldexpr=nvim_treesitter#foldexpr()
 endif
 " }}}
 
-" Statusline configuration "{{{
+" Statusline specific "{{{
 if has('nvim')
 lua << EOF
-  require('lualine').setup({
-    globalstatus = false,
-    sections = {
-      lualine_c = {{'filename', path=1}},
+  require('lualine').setup {
+  options = {
+    globalstatus = false
+    },
+  sections = {
+      lualine_c = {{'filename', path=1}}, -- relative path
     }
-  })
+  }
 EOF
 else
   let g:airline#extensions#ale#enabled = 1
+endif
+" }}}
+
+" Bufferline specific {{{
+if has('nvim')
+lua << EOF
+  require('bufferline').setup {
+    options = {
+      mode = "tabs",
+      }
+    }
+EOF
 endif
 " }}}
 
@@ -681,14 +754,12 @@ vim.api.nvim_set_keymap("n", "<leader>xw", "<cmd>Trouble workspace_diagnostics<c
   {silent = true, noremap = true}
 )
 EOF
-endif
 " }}}
 
 " Define large file size (mb)
 let g:LargeFile = 2
 
 " Smooth scroll {{{
-if has('nvim')
 lua require('neoscroll').setup()
 " }}}
 
@@ -721,6 +792,64 @@ require('Comment').setup {
     eol = 'gcA',
     }
   }
+EOF
+" }}}
+
+" Toggleterm {{{
+lua << EOF
+require("toggleterm").setup {
+  open_mapping = [[<c-\>]],
+  direction = 'vertical',
+  size = function(term)
+    if term.direction == "horizontal" then
+      return 15
+    elseif term.direction == "vertical" then
+      return vim.o.columns * 0.3
+    end
+  end
+}
+
+function _G.set_terminal_keymaps()
+  local opts = {noremap = true}
+  vim.api.nvim_buf_set_keymap(0, 't', '<C-h>', [[<C-\><C-n><C-W>h]], opts)
+  vim.api.nvim_buf_set_keymap(0, 't', '<C-j>', [[<C-\><C-n><C-W>j]], opts)
+  vim.api.nvim_buf_set_keymap(0, 't', '<C-k>', [[<C-\><C-n><C-W>k]], opts)
+  vim.api.nvim_buf_set_keymap(0, 't', '<C-l>', [[<C-\><C-n><C-W>l]], opts)
+end
+
+-- if you only want these mappings for toggle term use term://*toggleterm#* instead else use *
+vim.cmd('autocmd! TermOpen term://*toggleterm#* lua set_terminal_keymaps()')
+
+-- Lazygit terminal {
+local Terminal  = require('toggleterm.terminal').Terminal
+local on_term_open = function(term)
+    vim.cmd('startinsert!')
+    vim.api.nvim_buf_set_keymap(term.bufnr, 'n', 'q', '<cmd>close<CR>', {noremap = true, silent = true})
+  end
+
+local lazygit = Terminal:new({
+  cmd = 'lazygit',
+  dir = 'git_dir',
+  direction = 'float',
+  float_opts = {
+    border = 'double',
+  },
+  -- function to run on opening the terminal
+  on_open = on_term_open
+  })
+
+local htop = Terminal:new({ cmd = 'htop', direction='float', on_open = on_term_open })
+
+function _lazygit_toggle()
+  lazygit:toggle()
+end
+function _htop_toggle()
+  htop:toggle()
+end
+
+vim.api.nvim_set_keymap('n', '<leader>lg', '<cmd>lua _lazygit_toggle()<CR>', {noremap = true, silent = true})
+vim.api.nvim_set_keymap('n', '<leader>ht', '<cmd>lua _htop_toggle()<CR>', {noremap = true, silent = true})
+-- }
 EOF
 " }}}
 endif
