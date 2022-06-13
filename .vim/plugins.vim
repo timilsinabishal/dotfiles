@@ -35,6 +35,7 @@ if has('nvim')
   Plug 'kosayoda/nvim-lightbulb'
   Plug 'ThePrimeagen/refactoring.nvim'
   Plug 'akinsho/toggleterm.nvim'
+  Plug 'antoinemadec/FixCursorHold.nvim'
 else
   Plug 'vim-airline/vim-airline' "also integrates with ale
 endif
@@ -48,9 +49,9 @@ if has('nvim')
   Plug 'JoosepAlviste/nvim-ts-context-commentstring' " sets commentstring according to treesitter
   Plug 'numToStr/Comment.nvim'
 else
-Plug 'tpope/vim-fugitive'
   Plug 'airblade/vim-gitgutter'
 endif
+Plug 'tpope/vim-fugitive'
 
 " Track time spent
 Plug 'wakatime/vim-wakatime'
@@ -74,7 +75,7 @@ if has('nvim')
   Plug 'hrsh7th/cmp-nvim-lsp'
   Plug 'hrsh7th/cmp-buffer'
   Plug 'hrsh7th/cmp-path'
-  Plug 'hrsh7th/cmp-cmdline'
+  Plug 'hrsh7th/cmp-copilot'
   Plug 'hrsh7th/nvim-cmp'
 
   " LuaSnip
@@ -83,6 +84,11 @@ if has('nvim')
 
   Plug 'VonHeikemen/lsp-zero.nvim'
 
+  Plug 'ray-x/lsp_signature.nvim' " Show function signatures when typing
+
+  Plug 'github/copilot.vim'
+  " Icons for autocompletion
+  Plug 'onsails/lspkind.nvim'
 else
   Plug 'Valloric/YouCompleteMe', { 'do': function('BuildYCM') }
   " Plug 'python-mode/python-mode', { 'branch': 'develop' }
@@ -103,7 +109,6 @@ else
   Plug 'scrooloose/nerdcommenter'
 endif
 Plug 'editorconfig/editorconfig-vim'
-Plug 'mattn/emmet-vim'
 
 if has('nvim')
   Plug 'rafamadriz/friendly-snippets'
@@ -187,6 +192,11 @@ local lsp = require('lsp-zero')
 
 lsp.preset('recommended')
 
+-- Copilot config
+vim.g.copilot_no_tab_map = true
+vim.g.copilot_assume_mapped = true
+vim.g.copilot_tab_fallback = ''
+
 -- Key mappings
 local has_words_before = function()
   local line, col = unpack(vim.api.nvim_win_get_cursor(0))
@@ -210,6 +220,12 @@ cmp_mapping['<Tab>'] = cmp.mapping(function(fallback)
   elseif has_words_before() then
     cmp.complete()
   else
+    local copilot_keys = vim.fn["copilot#Accept"]()
+    if copilot_keys ~= "" then
+        vim.api.nvim_feedkeys(copilot_keys, "i", true)
+    else
+        fallback()
+    end
     fallback() -- The fallback function sends a already mapped key. In this case, it's probably `<Tab>`.
   end
 end, { 'i', 's' })
@@ -222,13 +238,41 @@ cmp_mapping['<S-Tab>'] = cmp.mapping(function(fallback)
   else
     fallback()
   end
-end, { 'i', 's' }),
+end, { 'i', 's' })
+
+local cmp_sources = {
+  { name = 'path' },
+  { name = 'nvim_lsp' },
+  { name = 'buffer' },
+  { name = 'luasnip' },
+  { name = 'copilot' },
+}
 
 lsp.setup_nvim_cmp({
   completion = {
     completeopt = 'menu,menuone,noinsert,noselect'
   },
-  mapping = cmp_mapping
+  mapping = cmp_mapping,
+  sources = cmp_sources,
+  formatting = {
+    fields = {'abbr', 'kind', 'menu'},
+    format = function(entry, item)
+      local short_name = {
+        nvim_lsp = '',
+        nvim_lua = '',
+        luasnip = '',
+        buffer = '﬘',
+        path = '',
+        copilot = '',
+      }
+      local lspkind = require('lspkind')
+      item.kind = string.format('%s %s', lspkind.presets.default[item.kind], item.kind)
+
+      item.menu = short_name[entry.source.name] or entry.source.name
+
+      return item
+    end,
+  }
 })
 
 -- disable tsserver formatting so it doesn't interfere null-ls
@@ -250,10 +294,12 @@ lsp.on_attach(function(client, bufnr)
 
   bind('n', 'mr', '<cmd>lua vim.lsp.buf.rename()<cr>', noremap)
   bind('n', 'ca', '<cmd>lua vim.lsp.buf.code_action()<cr>', noremap)
-  bind("n", "<leader>qf", "<cmd>Trouble quickfix<cr>", noremap)
-  bind("n", "<leader>ll", "<cmd>Trouble loclist<cr>", noremap)
-  bind("n", "<leader>ge", "<cmd>Trouble document_diagnostics<cr>", noremap)
-  bind("n", "gr", "<cmd>Trouble lsp_references<cr>", noremap)
+  bind('n', '<leader>qf', '<cmd>Trouble quickfix<cr>', noremap)
+  bind('n', '<leader>ll', '<cmd>Trouble loclist<cr>', noremap)
+  bind('n', '<leader>ge', '<cmd>Trouble document_diagnostics<cr>', noremap)
+  bind('n', 'gr', '<cmd>Trouble lsp_references<cr>', noremap)
+
+  require('lsp_signature').on_attach();
 end)
 lsp.setup()
 
@@ -278,6 +324,12 @@ end
 
 -- Print diagnostic message as popup
 vim.api.nvim_set_keymap('n', '<space>e', '<cmd>lua vim.diagnostic.open_float()<CR>', { noremap=true, silent=true })
+
+-- Show functions signature when typing the arguments
+require('lsp_signature').setup {
+  bind = true,
+  floating_window = true,
+}
 
 EOF
 endif
@@ -323,10 +375,8 @@ null_ls.setup({
       null_ls.builtins.diagnostics.eslint_d,
       null_ls.builtins.formatting.eslint_d,
       null_ls.builtins.formatting.prettierd.with({
-        condition = function(utils)
-            return utils.root_has_file({'./node_modules/.bin/prettier'})
-        end,
-      }),
+            only_local = "node_modules/.bin",
+        }),
       null_ls.builtins.formatting.stylelint,
       null_ls.builtins.formatting.black,
       null_ls.builtins.formatting.autopep8,
@@ -362,11 +412,12 @@ lua << EOF
 require('gitsigns').setup {
   current_line_blame = true, -- Toggle with `:Gitsigns toggle_current_line_blame`
   current_line_blame_opts = {
-    virt_text_pos = 'right_align', -- 'eol' | 'overlay' | 'right_align'
+    virt_text_pos = 'eol', -- 'eol' | 'overlay' | 'right_align'
     delay = 500,
     ignore_whitespace = false,
     },
-  current_line_blame_formatter = '<author>, <author_time:%Y-%m-%d>', -- <summary>', removed summary for long ones
+  current_line_blame_formatter = '            <author>, <author_time:%Y-%m-%d> -- <summary>',
+  current_line_blame_formatter_nc = '            <author>',
   on_attach = function(bufnr)
     local gs = package.loaded.gitsigns
 
@@ -395,11 +446,36 @@ endif
 " Look and feel
 " """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-" Colorschme {{{
+" Colorscheme {{{
 " Change the "hint" color to the "orange" color, and make the "error" color bright red
 if has('nvim')
-  let g:tokyonight_style = "night"
-  colorscheme tokyonight
+" Themes config {
+" Onedark
+lua << EOF
+  require('onedark').setup  {
+    -- Main options --
+    style = 'deep', -- Default theme style. Choose between 'dark', 'darker', 'cool', 'deep', 'warm', 'warmer' and 'light'
+  }
+
+ -- Nightfox
+  local palettes = {
+    nightfox = {
+      bg1 = '#171f2c', -- default #192330
+    }
+  }
+  require("nightfox").setup({ palettes = palettes })
+EOF
+" Tokyonight
+  let g:tokyonight_style = 'night' " storm | night
+
+" Sonokai
+  let g:sonokai_style = 'andromeda'
+  let g:sonokai_better_performance = 1
+
+" }
+
+  " Now setup default theme
+  colorscheme nightfox
 endif
 " }}}
 
@@ -421,9 +497,9 @@ require'nvim-treesitter.configs'.setup {
   incremental_selection = {
     enable = true,
     keymaps = {
-      init_selection = ".",
-      node_incremental = ".",
-      node_decremental = ",",
+      init_selection = "v;",
+      node_incremental = ";",
+      node_decremental = "'",
     },
   },
   autotag = {
@@ -487,8 +563,9 @@ if has('nvim')
 lua << EOF
   require('lualine').setup {
   options = {
-    globalstatus = false
-    },
+    globalstatus = false,
+    theme = 'nightfox',
+  },
   sections = {
       lualine_c = {{'filename', path=1}}, -- relative path
     }
@@ -514,10 +591,13 @@ endif
 " Show indentation guides {{{
 if has('nvim')
 lua << EOF
+vim.opt.list = true
+vim.opt.listchars:append("eol:↴")
 require("indent_blankline").setup {
     -- for example, context is off by default, use this to turn it on
     show_current_context = true,
     show_current_context_start = true,
+    show_end_of_line = true,
 }
 EOF
 endif
@@ -708,13 +788,13 @@ endif
 " Misc
 " """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
+" Cursorhold time
+let g:cursorhold_updatetime = 500
+
 " UndoTree specific "{{{
 nnoremap U :UndotreeToggle<cr>
 let g:undotree_SetFocusWhenToggle = 0
 " }}}
-
-" <TAB>: completion.
-inoremap <expr><TAB>  pumvisible() ? '\<C-n>' : '\<TAB>'
 
 " Trouble {{{
 if has('nvim')
